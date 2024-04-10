@@ -1,11 +1,8 @@
 name: ci
 
 on:
-  push:
-    branches:
-      - master
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "0 */3 * * *"
 
 jobs:
   autogreen:
@@ -14,7 +11,12 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v2
 
-      - name: Auto green
+      - name: Random Decide
+        id: random
+        run: echo "::set-output name=commit::$(($RANDOM % 2))"
+
+      - name: Conditional commit
+        if: steps.random.outputs.commit == '1'
         run: |
           git config --local user.email "zach12188@gmail.com"
           git config --local user.name "kyrxie"
